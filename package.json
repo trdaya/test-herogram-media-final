@@ -1,0 +1,34 @@
+{
+  "name": "test-herogram-media",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write './*.{md,yml,yaml,env}'"
+  },
+  "keywords": [],
+  "author": "Dayashankar Thali Ramesh",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3"
+  },
+  "lint-staged": {
+    "./frontend/src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --config ./frontend/.eslintrc.json",
+      "prettier --write --config ./frontend/.prettierrc --ignore-path ./frontend/.prettierignore",
+      "git add"
+    ],
+    "./backend/{src,test}/**/*.ts": [
+      "eslint --fix --config ./backend/.eslintrc.js",
+      "prettier --write --config ./backend/.prettierrc --ignore-path ./backend/.prettierignore",
+      "git add"
+    ],
+    "./*.{md,yml,yaml,env}": [
+      "prettier --write --config ./.prettierrc --ignore-path ./.prettierignore",
+      "git add"
+    ]
+  }
+}

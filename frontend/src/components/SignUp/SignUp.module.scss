@@ -1,0 +1,15 @@
+@import '../AuthForm/AuthForm.scss';
+
+.validationHints {
+  margin-top: 5px;
+  font-size: 12px;
+  color: $authFormPasswordValidationHintColor;
+}
+
+.validationHints .valid {
+  color: $authFormPasswordValidationHintValidColor;
+}
+
+.validationHints .invalid {
+  color: $authFormPasswordValidationHintInvalidColor;
+}

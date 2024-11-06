@@ -1,0 +1,160 @@
+@import '../../constants/css.scss';
+
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $loginPageBackground;
+  column-gap: 20px;
+}
+
+.form {
+  width: 100%;
+  max-width: 320px;
+  padding: 20px;
+  border-radius: 6px;
+  background-color: $authFormBackgroundColor;
+  box-shadow: 0 4px 10px $authFormBoxShadowColor;
+}
+
+.header {
+  font-size: 24px;
+  font-weight: 600;
+  color: $authFormHeaderColor;
+  text-align: center;
+}
+
+form {
+  margin-top: 30px;
+}
+
+.form .field {
+  position: relative;
+  height: 45px;
+  width: 100%;
+  margin-top: 15px;
+  border-radius: 6px;
+}
+
+.inputField {
+  margin-bottom: 40px;
+}
+
+.field input,
+.field button {
+  height: 100%;
+  width: 100%;
+  border: none;
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 6px;
+}
+
+.field input {
+  outline: none;
+  padding: 0 10px;
+  border: 1px solid $authFormInputBorderColor;
+}
+
+.field input:focus {
+  border-bottom-width: 2px;
+}
+
+.eyeIcon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: $authFormPasswordEyeIconColor;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.field button {
+  color: $authFormSubmitButtonColor;
+  background-color: $authFormSubmitButtonBackgroundColor;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.field button:hover {
+  background-color: $authFormSubmitButtonBackgroundHoverColor;
+}
+
+.formLink {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.formLink span,
+.formLink a {
+  font-size: 12px;
+  font-weight: 400;
+  color: $authFormDontHaveAnAccountTextColor;
+}
+
+.form a {
+  color: $authFormDontHaveAnAccountButtonColor;
+  text-decoration: none;
+}
+
+.formContent a:hover {
+  text-decoration: underline;
+}
+
+.errorText {
+  height: 16px;
+  color: $authFormErrorTextColor;
+  font-size: 12px;
+  margin-top: 5px;
+  visibility: visible;
+}
+
+.field .errorInput {
+  border: 1px solid $authFormErrorInputBorderColor;
+}
+
+@media (min-width: $sizeMd) {
+  .container {
+    column-gap: 30px;
+  }
+  .form {
+    max-width: 430px;
+    padding: 30px;
+  }
+  .header {
+    font-size: 28px;
+  }
+  .form .field {
+    height: 50px;
+  }
+  .field input,
+  .field button {
+    font-size: 16px;
+  }
+  .formLink span,
+  .formLink a {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: $sizeLg) {
+  .container {
+    column-gap: 40px;
+  }
+  .form {
+    max-width: 500px;
+    padding: 40px;
+  }
+}
+
+@media (min-width: $sizeXl) {
+  .container {
+    column-gap: 50px;
+  }
+  .form {
+    max-width: 600px;
+  }
+}
