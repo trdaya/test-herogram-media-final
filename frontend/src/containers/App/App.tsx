@@ -22,7 +22,7 @@ const AppRoutes = () => {
   const { isLoading } = useAuth();
 
   if (isLoading) {
-    return <HashLoader color="#ff6600" size={60} />;
+    return <HashLoader color="#5a40dc" size={60} />;
   }
 
   return (
@@ -48,7 +48,7 @@ const App = () => {
           <div className={styles.page}>
             <Suspense
               fallback={
-                <HashLoader color="#ff6600" loading={isLoading} size={60} />
+                <HashLoader color="#5a40dc" loading={isLoading} size={60} />
               }
             >
               <AppRoutes />

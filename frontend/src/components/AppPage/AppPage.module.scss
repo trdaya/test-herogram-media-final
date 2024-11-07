@@ -4,14 +4,20 @@
   width: 100%;
   height: 100%;
   background: $appPageBackground;
-  padding: 0 10px 0 10px;
+  padding: 0 40px;
 }
 
-h1,
-h2 {
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 15px;
+.mainTitle {
+  margin: 16px 0 20px 0;
+  text-align: center;
+}
+
+.subTitle {
+  margin: 20px 0;
+}
+
+.noFilesFound {
+  margin: 40px 0;
 }
 
 .uploadError {
@@ -20,15 +26,24 @@ h2 {
 }
 
 .fileInput {
-  margin: 15px 0;
+  margin: 20px 0;
 }
 
 .fileItem {
   margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #fff;
+  padding: 10px 20px;
+  border: 1px solid $fileItemBorderColor;
+  border-radius: 10px;
+  background-color: $fileItemBackgroundColor;
+}
+
+.fileName {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .progressBarContainer {

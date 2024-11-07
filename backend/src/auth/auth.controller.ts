@@ -132,6 +132,7 @@ export class AuthController {
   })
   @Version('1')
   @HttpCode(200)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   @Post('refresh-access-token')
   async refreshAccessToken(@Req() req) {
     const refreshToken = req.cookies['refreshToken'];
@@ -144,6 +145,7 @@ export class AuthController {
 
   @Version('1')
   @HttpCode(200)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   @Post('logout')
   async logout(@Req() req, @Res() res: Response) {
     res.clearCookie('refreshToken', {

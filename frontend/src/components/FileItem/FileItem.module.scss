@@ -1,0 +1,44 @@
+@import '../../constants/css.scss';
+
+.wrapper {
+  margin-bottom: 10px;
+  padding: 20px;
+  border: 1px solid $fileItemBorderColor;
+  border-radius: 10px;
+  background-color: $fileItemBackgroundColor;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 20px;
+}
+
+.fileName {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.viewsWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8px;
+}
+
+.copyMessage {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 8px 12px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 4px;
+  opacity: 0.9;
+  font-size: 14px;
+  z-index: 1000;
+}

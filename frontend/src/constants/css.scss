@@ -2,6 +2,8 @@ $primaryBackground: linear-gradient(90deg, #cbdbf3, #89b6ff);
 
 $loginPageBackground: linear-gradient(90deg, #cbdbf3, #89b6ff);
 
+$pageLoaderColor: #5a40dc;
+
 $authFormBackgroundColor: white;
 $authFormBoxShadowColor: rgba(0, 0, 0, 0.1);
 $authFormHeaderColor: #232836;
@@ -21,13 +23,16 @@ $authFormPasswordValidationHintInvalidColor: red;
 $headerBackgroundBeforeLogin: linear-gradient(90deg, #cbdbf3, #89b6ff);
 $headerBackgroundAfterLogin: #fafafa;
 $headerAvatarTextColor: white;
-$headerAvatarBackgroundColor: #3466f0;
-$headerDropdownBackgroundColor: #b1c4f7;
+$headerAvatarBackgroundColor: #583ed7;
+$headerDropdownBackgroundColor: #bbb0f747;
 $headerDropdownBorderColor: #ccc;
 $headerLogoutButtonColor: red;
 $headerLogoutButtonBackground: transparent;
 
 $appPageBackground: #fafafa;
+
+$fileItemBorderColor: #ccc;
+$fileItemBackgroundColor: #fff;
 
 $sizeMd: 601px;
 $sizeLg: 1025px;

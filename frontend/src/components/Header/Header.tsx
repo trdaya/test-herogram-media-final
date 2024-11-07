@@ -33,9 +33,8 @@ const Header = () => {
       <img
         className={styles.logo}
         src="https://static.wixstatic.com/media/14322a_5e5a7fdd4d584d5083e00449c25cb990~mv2.png/v1/fill/w_336,h_336,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/herogram_mark_1080.png"
-        alt="Logo"
+        alt="Herogram logo"
         onClick={() => navigate(ROUTES.APP)}
-        style={{ cursor: 'pointer' }}
       />
       {isLoggedIn && (
         <div

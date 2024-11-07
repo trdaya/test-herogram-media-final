@@ -4,7 +4,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export const showToast = (
   message: string,
-  type: 'success' | 'error' | 'info'
+  type: 'success' | 'error' | 'info',
+  showIcon: boolean = true,
+  autoCloseTime?: number
 ) => {
   if (type === 'success') {
     toast.success(message, {
@@ -16,9 +18,13 @@ export const showToast = (
   } else {
     toast.info(message, {
       position: 'top-right',
-      autoClose: 5000,
+      autoClose: autoCloseTime || 5000,
       progressStyle: { background: 'gray' },
-      icon: <FaInfoCircle style={{ color: 'gray' }} size={20} />,
+      icon: showIcon ? (
+        <FaInfoCircle style={{ color: 'gray' }} size={20} />
+      ) : (
+        false
+      ),
     });
   }
 };

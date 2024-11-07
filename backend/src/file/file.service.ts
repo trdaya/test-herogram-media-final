@@ -58,7 +58,10 @@ export class FileService {
   }
 
   async getFilesByUser(userId: string): Promise<File[]> {
-    return this.fileModel.find({ userId: new Types.ObjectId(userId) }).exec();
+    return await this.fileModel
+      .find({ userId: new Types.ObjectId(userId) })
+      .sort('-uploadedAt')
+      .exec();
   }
 
   async deleteFile(fileId: string, userId: string): Promise<void> {

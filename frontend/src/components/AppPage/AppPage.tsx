@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import apiClient from '../../constants/apiClient';
 import FileItem from '../FileItem/FileItem';
 import { useAuth } from '../../contexts/AuthContext/AuthContext';
@@ -30,8 +30,10 @@ const App: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const [files, setFiles] = useState<AppFile[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const [fetchingFiles, setFetchingFiles] = useState<boolean>(false);
 
   useEffect(() => {
     fetchFiles();
@@ -39,12 +41,15 @@ const App: React.FC = () => {
 
   const fetchFiles = async () => {
     try {
+      setFetchingFiles(true);
       const response = await apiClient.get<AppFile[]>(
         '/api/v1/files/user-files'
       );
       setFiles(response.data);
     } catch (error) {
       console.error('Error fetching files:', error);
+    } finally {
+      setFetchingFiles(false);
     }
   };
 
@@ -113,7 +118,6 @@ const App: React.FC = () => {
           },
         })
         .then(response => {
-          setUploadingFiles(prev => prev.filter(f => f.uniqueId !== uniqueId));
           setFiles(prev => [
             ...prev,
             { ...response.data, filename: response.data.filename || file.name },
@@ -121,17 +125,26 @@ const App: React.FC = () => {
         })
         .catch(error => {
           console.error(`Error uploading file ${file.name}:`, error);
+        })
+        .finally(() => {
           setUploadingFiles(prev => prev.filter(f => f.uniqueId !== uniqueId));
+          if (fileInputRef.current) fileInputRef.current.value = '';
         });
     });
   };
 
-  const handleFileDelete = async (fileId: string) => {
-    try {
-      await apiClient.delete(`/api/v1/files/${fileId}`);
-      fetchFiles();
-    } catch (error) {
-      console.error('Error deleting file:', error);
+  const handleFileDelete = async (fileId: string, fileName: string) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete the file "${fileName}"?`
+    );
+
+    if (confirmDelete) {
+      try {
+        await apiClient.delete(`/api/v1/files/${fileId}`);
+        fetchFiles();
+      } catch (error) {
+        console.error('Error deleting file:', error);
+      }
     }
   };
 
@@ -147,8 +160,9 @@ const App: React.FC = () => {
 
   return (
     <motion.div {...routeAnimation} className={styles.wrapper}>
-      <h1>File Management</h1>
+      <h1 className={styles.mainTitle}>File Management</h1>
       <input
+        ref={fileInputRef}
         type="file"
         multiple
         onChange={handleFileChange}
@@ -166,27 +180,37 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <h2>Uploading Files</h2>
-      <div>
-        {uploadingFiles.map(file => (
-          <div key={file.uniqueId} className={styles.fileItem}>
-            <h3>{file.filename}</h3>
-            <div className={styles.progressBarContainer}>
-              <div
-                className={styles.progressBar}
-                style={{ width: `${file.progress}%` }}
-              ></div>
-            </div>
-            <p className={styles.progressText}>{file.progress}%</p>
-          </div>
-        ))}
-      </div>
+      <h2 className={styles.subTitle}>Your Files</h2>
 
-      <h2>Your Files</h2>
       <div>
-        {files.map(file => (
-          <FileItem key={file._id} file={file} onDelete={handleFileDelete} />
-        ))}
+        {fetchingFiles && 'Loading...'}
+        {!uploadingFiles.length && !files.length ? (
+          <h3 className={styles.noFilesFound}>
+            You do not have any files. Upload some using the button above!{' '}
+          </h3>
+        ) : (
+          <>
+            {uploadingFiles.map(file => (
+              <div key={file.uniqueId} className={styles.fileItem}>
+                <div className={styles.fileName}>{file.filename}</div>
+                <div className={styles.progressBarContainer}>
+                  <div
+                    className={styles.progressBar}
+                    style={{ width: `${file.progress}%` }}
+                  ></div>
+                </div>
+                <p className={styles.progressText}>{file.progress}%</p>
+              </div>
+            ))}
+            {files.map(file => (
+              <FileItem
+                key={file._id}
+                file={file}
+                onDelete={handleFileDelete}
+              />
+            ))}
+          </>
+        )}
       </div>
     </motion.div>
   );
