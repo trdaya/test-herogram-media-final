@@ -14,8 +14,8 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
-import { FileService } from './file.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { FileService } from './file.service';
 
 @Controller('files')
 export class FileController {
@@ -34,7 +34,13 @@ export class FileController {
     const uploadedFile = await this.fileService.uploadFile(file, tags, userId);
     return {
       message: 'File uploaded successfully',
-      fileId: uploadedFile._id,
+      file: {
+        _id: uploadedFile._id.toString(),
+        filename: uploadedFile.filename,
+        tags: uploadedFile.tags,
+        viewCount: uploadedFile.viewCount,
+        uploadedAt: uploadedFile.uploadedAt,
+      },
     };
   }
 
@@ -44,7 +50,13 @@ export class FileController {
   async getUserFiles(@Req() req: Request) {
     const userId = req.user._id;
     const files = await this.fileService.getFilesByUser(userId);
-    return files;
+    return files.map(file => ({
+      _id: file._id.toString(),
+      filename: file.filename,
+      tags: file.tags,
+      viewCount: file.viewCount,
+      uploadedAt: file.uploadedAt,
+    }));
   }
 
   @UseGuards(JwtAuthGuard)

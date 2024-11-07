@@ -54,14 +54,14 @@ export class FileService {
       userId: new Types.ObjectId(userId),
     });
 
-    return await newFile.save();
+    return (await newFile.save()).toObject();
   }
 
   async getFilesByUser(userId: string): Promise<File[]> {
-    return await this.fileModel
+    return this.fileModel
       .find({ userId: new Types.ObjectId(userId) })
       .sort('-uploadedAt')
-      .exec();
+      .lean();
   }
 
   async deleteFile(fileId: string, userId: string): Promise<void> {

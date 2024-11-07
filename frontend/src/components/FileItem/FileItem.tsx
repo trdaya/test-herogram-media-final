@@ -28,19 +28,25 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete }) => {
         showToast(
           `Copied "${file.filename}" link to clipboard!`,
           'info',
-          undefined,
+          true,
           2000
         );
       },
       error => {
         console.error('Failed to copy link: ', error);
+        showToast(
+          `Failed to copy link for file ${file.filename}. Please try again.`,
+          'error'
+        );
       }
     );
   };
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.fileName}>{file.filename}</div>
+      <div className={styles.fileName} title={file.filename}>
+        {file.filename}
+      </div>
       <FiLink
         size={20}
         onClick={() => copyToClipboard(file._id)}

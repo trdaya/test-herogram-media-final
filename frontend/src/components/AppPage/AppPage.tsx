@@ -7,6 +7,9 @@ import { routeAnimation } from '../../constants/animations';
 import { ROUTES } from '../../constants/routes';
 import { motion } from 'framer-motion';
 import styles from './AppPage.module.scss';
+import { showToast } from '../ToastManager/ToastManager';
+import { TbRefresh } from 'react-icons/tb';
+import { HashLoader } from 'react-spinners';
 
 interface AppFile {
   _id: string;
@@ -35,10 +38,6 @@ const App: React.FC = () => {
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [fetchingFiles, setFetchingFiles] = useState<boolean>(false);
 
-  useEffect(() => {
-    fetchFiles();
-  }, []);
-
   const fetchFiles = async () => {
     try {
       setFetchingFiles(true);
@@ -48,6 +47,10 @@ const App: React.FC = () => {
       setFiles(response.data);
     } catch (error) {
       console.error('Error fetching files:', error);
+      showToast(
+        'Error fetching files. Please reload the page and try again.',
+        'error'
+      );
     } finally {
       setFetchingFiles(false);
     }
@@ -118,13 +121,19 @@ const App: React.FC = () => {
           },
         })
         .then(response => {
-          setFiles(prev => [
-            ...prev,
-            { ...response.data, filename: response.data.filename || file.name },
-          ]);
+          setFiles(prev =>
+            prev
+              .concat(response.data.file)
+              .sort(
+                (a: any, b: any) =>
+                  new Date(b.uploadedAt).getTime() -
+                  new Date(a.uploadedAt).getTime()
+              )
+          );
         })
         .catch(error => {
           console.error(`Error uploading file ${file.name}:`, error);
+          showToast(`Error uploading file "${file.name}"`, 'error');
         })
         .finally(() => {
           setUploadingFiles(prev => prev.filter(f => f.uniqueId !== uniqueId));
@@ -141,12 +150,21 @@ const App: React.FC = () => {
     if (confirmDelete) {
       try {
         await apiClient.delete(`/api/v1/files/${fileId}`);
-        fetchFiles();
+        setFiles(prevFiles => prevFiles.filter(file => file._id !== fileId));
+        showToast(`File "${fileName}" deleted successfully`, 'success');
       } catch (error) {
         console.error('Error deleting file:', error);
+        showToast(
+          `Error deleting file "${fileName}". Please try again`,
+          'error'
+        );
       }
     }
   };
+
+  useEffect(() => {
+    fetchFiles();
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -180,11 +198,20 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <h2 className={styles.subTitle}>Your Files</h2>
+      <h2 className={styles.subTitle}>
+        Your Files &nbsp;&nbsp;
+        <TbRefresh
+          size={20}
+          title="Re-fetch files"
+          onClick={fetchFiles}
+          cursor={'pointer'}
+        />
+      </h2>
 
       <div>
-        {fetchingFiles && 'Loading...'}
-        {!uploadingFiles.length && !files.length ? (
+        {fetchingFiles ? (
+          <HashLoader color="#5a40dc" size={60} className={styles.loader} />
+        ) : !uploadingFiles.length && !files.length ? (
           <h3 className={styles.noFilesFound}>
             You do not have any files. Upload some using the button above!{' '}
           </h3>
@@ -192,7 +219,9 @@ const App: React.FC = () => {
           <>
             {uploadingFiles.map(file => (
               <div key={file.uniqueId} className={styles.fileItem}>
-                <div className={styles.fileName}>{file.filename}</div>
+                <div className={styles.fileName} title={file.filename}>
+                  {file.filename}
+                </div>
                 <div className={styles.progressBarContainer}>
                   <div
                     className={styles.progressBar}
