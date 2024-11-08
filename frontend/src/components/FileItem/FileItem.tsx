@@ -23,23 +23,49 @@ const FileItem: React.FC<FileItemProps> = ({ file, onDelete }) => {
   const copyToClipboard = (fileId: string) => {
     const link = `${import.meta.env.VITE_API_URL}/api/v1/files/public/${fileId}`;
 
-    navigator.clipboard.writeText(link).then(
-      () => {
+    // @ts-ignore
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(link).then(
+        () => {
+          showToast(
+            `Copied "${file.filename}" link to clipboard!`,
+            'info',
+            true,
+            2000
+          );
+        },
+        error => {
+          console.error('Failed to copy link: ', error);
+          showToast(
+            `Failed to copy link for file ${file.filename}. Please try again.`,
+            'error'
+          );
+        }
+      );
+    } else {
+      const textArea = document.createElement('textarea');
+      textArea.value = link;
+      textArea.style.position = 'fixed';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
         showToast(
           `Copied "${file.filename}" link to clipboard!`,
           'info',
           true,
           2000
         );
-      },
-      error => {
-        console.error('Failed to copy link: ', error);
+      } catch (err) {
+        console.error('Fallback: Failed to copy link: ', err);
         showToast(
           `Failed to copy link for file ${file.filename}. Please try again.`,
           'error'
         );
       }
-    );
+      document.body.removeChild(textArea);
+    }
   };
 
   return (
